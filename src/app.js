@@ -82,7 +82,13 @@ app.put('/repositories/:id', (request, response) => {
 
   _validateRepo(repoIndex);
 
-  const repo = { id, title, url, techs };
+  const repo = { 
+    ...repositories[repoIndex],
+    id,
+    title,
+    url,
+    techs,
+  };
 
   repositories[repoIndex] = repo;
 
