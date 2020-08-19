@@ -24,7 +24,7 @@ const repositories = [];
     "url": "https://github.com/vinieloy/app-node-repositories",
     "techs": ["NodeJS", "Javascript"]
   }
- */
+*/
 
 function logRequests(request, response, next) {
   const { method, url } = request;
@@ -49,6 +49,14 @@ app.use(logRequests);
 app.use('/repositories/:id', validateRepoId);
 
 
+function _validateRepo(repoIndex) {
+  if(repoIndex < 0 ) {
+    return response.status(400).json({ 
+      error: 'Repo not found.' 
+    });
+  }
+}
+
 //GET - List
 app.get("/repositories", (request, response) => {
   return response.json(repositories);
@@ -72,11 +80,7 @@ app.put('/repositories/:id', (request, response) => {
   const { title, url, techs } = request.body;
   const repoIndex = repositories.findIndex(repo => repo.id == id);
 
-  if(repoIndex < 0 ) {
-    return response.status(400).json({ 
-      error: 'Repo not found.' 
-    });
-  }
+  _validateRepo(repoIndex);
 
   const repo = { id, title, url, techs };
 
@@ -91,11 +95,7 @@ app.delete("/repositories/:id", (request, response) => {
   const { id } = request.params;
   const repoIndex = repositories.findIndex(repo => repo.id == id);
 
-  if(repoIndex < 0 ) {
-    return response.status(400).json({ 
-      error: 'Repo not found.' 
-    });
-  }
+  _validateRepo(repoIndex);
 
   repositories.splice(repoIndex, 1);
 
@@ -108,11 +108,7 @@ app.post("/repositories/:id/like", (request, response) => {
   const { id } = request.params;
   const repoIndex = repositories.findIndex(repo => repo.id == id);
 
-  if(repoIndex < 0 ) {
-    return response.status(400).json({ 
-      error: 'Repo not found.' 
-    });
-  }
+  _validateRepo(repoIndex);
 
   const repo = repositories[repoIndex];
 
